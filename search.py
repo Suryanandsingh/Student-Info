@@ -1,12 +1,13 @@
 from database import run_query
 from tkinter import *
 from tkinter import ttk, messagebox
-from student_info import main
-
 # second page which is find the information of student
+
 class Find:
-    def __init__(self, root2):
-        self.root2 = root2
+    sett = 0
+    def __init__(self, root, main):
+        self.main = main
+        self.root2 = root
         self.root2.title("Search")
         labelframe = LabelFrame(self.root2, text='Search')
         labelframe.grid(row=0, column=1)
@@ -40,14 +41,16 @@ class Find:
         if self.valid():
             query=''
             if self.reg.get():
-                query = "SELECT * FROM students_info WHERE Reg = %s " % (self.reg.get())#UNION SELECT * FROM students_info WHERE Name = %s " % (self.reg.get(), self.name.get())
+                query = "SELECT * FROM students_info WHERE Reg = %s" % (self.reg.get())#UNION SELECT * FROM students_info WHERE Name = %s " % (self.reg.get(), self.name.get())
             else:
-                query = "SELECT * FROM students_info WHERE Roll = %s " % (self.roll.get())
+                query = "SELECT * FROM students_info WHERE Name ="+"'"+self.roll.get()+"'"
             # print(query)
             c = run_query(query)
             a = 0
             for i in c:
-                if i[0]:
+                # print(i)
+                if i[0:]:
+                    Geometry(self.root2, 690, 350)
                     # Tree View
                     a = 1
                     self.tree = ttk.Treeview(self.root2, height=5, column=2)
@@ -68,9 +71,8 @@ class Find:
                     self.upbtn.grid(row=4, column=5)
             if a == 0:
                 messagebox.showerror('error', 'this key is not available')
-
         else:
-            messagebox.showerror('error', 'Enter any answer')
+            messagebox.showerror('error', 'Enter any answer')#error
             # Label(self.root2, text='Please choose any option', fg='red', font=('times', 10, 'bold')).grid(row=5 ,column=1)
 
     # select information update
@@ -81,7 +83,7 @@ class Find:
             # print(updat)
             self.Update()
         except IndexError as e:
-            messagebox.showerror('error', 'Please select any info to update')
+            messagebox.showerror('error', 'Please select any info to update')#error
 
 
 
@@ -89,18 +91,24 @@ class Find:
     def finish(self):
 
         self.root2.destroy()
-        main()
+        self.main.deiconify()
+
 
     #update your selected information
     def Update(self):
 
-        self.Upwin = Tk()
+        self.Upwin = Toplevel()
         self.Upwin.title('update')
-        self.Upwin.minsize(height=150, width=230)
-        Label(self.Upwin, text='Enter your new data', font=('times',15,'bold')).grid(row=1, column=2)
-        self.upd = Entry(self.Upwin)
-        self.upd.grid(row=2, column=2)
-        Button(self.Upwin, text='Ok', command=self.set, font=('times',15,'bold')).grid(row=3, column=2)
+        Geometry(self.Upwin, 120, 230)
+        self.Upwin.minsize(height=120, width=230)
+        self.main_frame=Frame(self.Upwin,height=120,width=230)
+        self.main_frame.pack()
+        self.msg_label=Label(self.main_frame, text='Enter your new data', font=('times',15,'bold'))
+        self.msg_label.grid(row=1, column=2, padx=5, pady=11)
+        self.upd = Entry(self.main_frame)
+        self.upd.grid(row=2, column=2, padx=5, pady=11)
+        self.ok=Button(self.main_frame, text='Ok', command=self.set, font=('times',15,'bold'))
+        self.ok.grid(row=3, column=2, padx=5, pady=11)
 
     # set into database which data you select for update
     def set(self):
@@ -112,6 +120,25 @@ class Find:
             self.tree.destroy()
             self.upbtn.destroy()
             self.reg.delete(0, END)
+            self.roll.delete(0, END)
             self.Upwin.destroy()
+            Geometry(self.root2, 350, 300)
         else:
             messagebox.showerror('error', 'please enter data')
+
+def Geometry(root, width, height):
+    sw = root.winfo_screenwidth()
+    sh = root.winfo_screenheight()
+
+    x = (sw - width) / 2
+    y = (sh - height) / 2
+    root.geometry('%dx%d+%d+%d' % (width, height, x, y))
+
+def mains(root):
+    window = Toplevel()
+    width = 350
+    height = 300
+    window.minsize(width=width, height=height)
+    Geometry(window, width, height)
+    apps = Find(window, root)
+    window.protocol('WM_DELETE_WINDOW',apps.finish)

@@ -13,9 +13,9 @@ def run_query(query, parameters=()):
 
 #create table into database
 def create_table():
-    query = 'CREATE TABLE students_info(Name text, Roll integer,Reg integer, Course text, Address text, DOB text, PRIMARY KEY(Reg))'
+    query = 'CREATE TABLE students_info(Name text, Roll real,Reg integer, Course text, Address text, DOB text, PRIMARY KEY(Reg))'
     run_query(query)
 
 #for creating table
-create_table()
+# create_table()
 

@@ -2,8 +2,8 @@ from database import run_query
 from tkinter import *
 from tkinter import messagebox
 import search
-
-
+# import a
+# a.abc()
 # first page which is save data into database and go to find the data another page
 class student:
     def __init__(self, root):
@@ -72,8 +72,6 @@ class student:
                 run_query(query, parameters)
                 messagebox.showinfo('save', 'Student information saved')
                 self.clear()
-                self.name.index(INSERT)
-                self.name.index(INSERT)
             else:
                 messagebox.showerror('error', 'this registration already exist')
                 self.clear()
@@ -91,17 +89,12 @@ class student:
         self.course.delete(0, END)
         self.address.delete(0, END)
         self.DOB.delete(0, END)
+        self.name.focus_set()
 
     #for find the student information
     def search(self):
-        window = Tk()
-        width = 320
-        height = 250
-        window.minsize(width=width, height=height)
-        app2 = search.Find(window) # Find class down
-
-        #destroy first window
-        self.root.destroy()
+        self.root.withdraw()
+        search.mains(self.root)
 
 # screen set
 def Gremetry(root, width, height):
@@ -113,16 +106,15 @@ def Gremetry(root, width, height):
     root.geometry('%dx%d+%d+%d' % (width, height, x, y))
 
 #main
-def main():
-    root = Tk()
+# def main():
+root = Tk()
 
-    width = 570
-    height = 600
-    root.minsize(width=width, height=height)
-    Gremetry(root, width, height)
-    app = student(root)
-    root.mainloop()
+width = 570
+height = 600
+root.minsize(width=width, height=height)
+Gremetry(root, width, height)
+app = student(root)
+root.mainloop()
 
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
